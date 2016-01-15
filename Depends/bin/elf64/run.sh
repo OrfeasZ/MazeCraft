@@ -1,3 +1,3 @@
 #!/bin/sh
 
-LD_LIBRARY_PATH=. ./ropasci
+LD_LIBRARY_PATH=. ./mazecraft

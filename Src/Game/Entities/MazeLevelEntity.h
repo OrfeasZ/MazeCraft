@@ -33,6 +33,7 @@ namespace Game
 			void SetBlock(uint32_t p_Index, const std::string& p_Type);
 			bool GetRandomEmptyPosition(glm::vec3& p_Position, int32_t& p_X, int32_t& p_Y);
 			void SetWallVisibility(bool p_Visible);
+			void PopulateFrames();
 
 		public:
 			inline uint32_t GetLevel() const { return m_Level; }
@@ -48,6 +49,7 @@ namespace Game
 			MazeBlockEntity** m_Blocks;
 			std::vector<Rendering::Objects::Model*> m_FloorModels;
 			std::vector<Rendering::Objects::Model*> m_WallModels;
+			std::vector<Rendering::Objects::Model*> m_FrameModels;
 		};
 	}
 }

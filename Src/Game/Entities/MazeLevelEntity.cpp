@@ -40,8 +40,15 @@ MazeLevelEntity::~MazeLevelEntity()
 		delete s_Model;
 	}
 
+	for (auto s_Model : m_FrameModels)
+	{
+		Managers::ModelManager::GetInstance()->RemoveModel(s_Model);
+		delete s_Model;
+	}
+
 	m_FloorModels.clear();
 	m_WallModels.clear();
+	m_FrameModels.clear();
 }
 
 void MazeLevelEntity::Init()
@@ -206,4 +213,54 @@ void MazeLevelEntity::SetWallVisibility(bool p_Visible)
 {
 	for (auto s_Wall : m_WallModels)
 		s_Wall->ShouldRender(p_Visible);
+}
+
+void MazeLevelEntity::PopulateFrames()
+{
+	// Populate on X axis.
+	for (int y = 0; y < m_Size; ++y)
+	{
+		for (int x = 1; x < m_Size; ++x)
+		{
+			auto s_Block = GetBlock(x, y);
+			auto s_PrevBlock = GetBlock(x - 1, y);
+
+			if (s_Block->Type() == MazeBlockEntity::Empty && s_PrevBlock->Type() == MazeBlockEntity::Empty)
+			{
+				auto s_FrameModel = new Rendering::Objects::Model(Managers::ModelManager::GetInstance()->GetModelData("frame"),
+					Managers::ShaderManager::GetInstance()->GetShaderProgram("ShadedModel"));
+
+				s_FrameModel->Position(glm::vec3((x * 2.0) - 1.0, (m_Level * 2.0), (y * 2.0)));
+
+				s_FrameModel->Color(glm::vec4(0.5, 0.5, 0.5, 1.0));
+				s_FrameModel->Rotate(1.5708, glm::vec3(0.0, 1.0, 0.0));
+
+				m_FrameModels.push_back(s_FrameModel);
+				Managers::ModelManager::GetInstance()->RegisterModel(s_FrameModel);
+			}
+		}
+	}
+
+	// Populate on Y axis.
+	for (int x = 0; x < m_Size; ++x)
+	{
+		for (int y = 1; y < m_Size; ++y)
+		{
+			auto s_Block = GetBlock(x, y);
+			auto s_PrevBlock = GetBlock(x, y - 1);
+			
+			if (s_Block->Type() == MazeBlockEntity::Empty && s_PrevBlock->Type() == MazeBlockEntity::Empty)
+			{
+				auto s_FrameModel = new Rendering::Objects::Model(Managers::ModelManager::GetInstance()->GetModelData("frame"),
+					Managers::ShaderManager::GetInstance()->GetShaderProgram("ShadedModel"));
+
+				s_FrameModel->Position(glm::vec3((x * 2.0), (m_Level * 2.0), (y * 2.0) - 1.0));
+
+				s_FrameModel->Color(glm::vec4(0.5, 0.5, 0.5, 1.0));
+
+				m_FrameModels.push_back(s_FrameModel);
+				Managers::ModelManager::GetInstance()->RegisterModel(s_FrameModel);
+			}
+		}
+	}
 }

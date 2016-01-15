@@ -56,6 +56,9 @@ MazeEntity::MazeEntity(const std::string& p_MazeName) :
 			s_Level->SetBlock(j, s_BlockType);
 		}
 
+		// Populate the level with door frames.
+		s_Level->PopulateFrames();
+
 		m_Levels.push_back(s_Level);
 	}
 }
